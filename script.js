@@ -1,5 +1,3 @@
-console.log("Let's play Rock, Paper, Scissors!");
-
 function playRound(humanChoice, computerChoice) {
   if (humanChoice === computerChoice) {
     return "draw";
@@ -58,47 +56,41 @@ Object.defineProperty(String.prototype, "capitalize", {
   enumerable: false,
 });
 
-function playGame() {
-  let humanScore = 0;
-  let computerScore = 0;
-  const rounds = 5;
+const rockButton = document.querySelector("#rock");
+const paperButton = document.querySelector("#paper");
+const scissorsButton = document.querySelector("#scissors");
 
-  for (let i = 0; i < rounds; i++) {
-    const humanSelection = getHumanChoice();
+const buttons = [rockButton, paperButton, scissorsButton];
+
+const playerScore = document.querySelector(".scoreboard .player");
+const computerScore = document.querySelector(".scoreboard .computer");
+
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const humanSelection = button.id;
     const computerSelection = getComputerChoice();
     const result = playRound(humanSelection, computerSelection);
 
-    let resultString = `Round ${i + 1}: `;
-
-    if (result === "win") {
-      humanScore++;
-      resultString += `You win! ${humanSelection.capitalize()} beats ${computerSelection.capitalize()}.`;
-    } else if (result === "lose") {
-      computerScore++;
-      resultString += `You lose! ${computerSelection.capitalize()} beats ${humanSelection.capitalize()}.`;
-    } else {
-      resultString += "It's a draw!";
+    switch (result) {
+      case "win":
+        playerScore.textContent = Number(playerScore.textContent) + 1;
+        break;
+      case "lose":
+        computerScore.textContent = Number(computerScore.textContent) + 1;
+        break;
     }
 
-    console.log(
-      "%c" + resultString,
-      `color: ${
-        result === "draw" ? "gray" : result === "win" ? "green" : "red"
-      }`
-    );
-  }
-
-  let finalResult = `Final Score: You ${humanScore}, Computer ${computerScore}`;
-
-  console.log(finalResult);
-
-  if (humanScore > computerScore) {
-    console.log("%cYou win!", "color: green");
-  } else if (humanScore < computerScore) {
-    console.log("%cYou lose!", "color: red");
-  } else {
-    console.log("%cIt's a draw!", "color: gray");
-  }
-}
-
-playGame();
+    if (
+      Number(playerScore.textContent) === 5 ||
+      Number(computerScore.textContent) === 5
+    ) {
+      if (Number(playerScore.textContent) === 5) {
+        alert("You win!");
+      } else {
+        alert("You lose!");
+      }
+      playerScore.textContent = 0;
+      computerScore.textContent = 0;
+    }
+  });
+});
